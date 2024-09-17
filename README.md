@@ -1,4 +1,4 @@
-This belongs to @ember-win.
+This belongs to [@ember-win](https://github.com/ember-win).
 
 # CS2 External Base
 
