@@ -1,3 +1,5 @@
+This belongs to @ember-win.
+
 # CS2 External Base
 
 Welcome to the CS2 External Base! This repository provides a simple and clean foundation for developing external tools for Counter-Strike 2 (CS2). It is designed to help developers understand the fundamentals of external tools and how they interact with the game.
