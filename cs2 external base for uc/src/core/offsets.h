@@ -9,6 +9,9 @@ class offset_manager
 {
 private:
     std::uintptr_t entity_list_ = 0x0;
+    std::uintptr_t global_vars_ = 0x0;
+    std::uintptr_t view_matrix_ = 0x0;
+    std::uintptr_t local_player_controller_ = 0x0;
 
     bool find_offset_from_signature(
         std::uintptr_t& return_offset,
@@ -32,6 +35,21 @@ public:
         return g_p_memory_system->read<std::uintptr_t>(entity_list_);
     }
 
+    std::uintptr_t get_global_vars_offset() const
+    {
+        return g_p_memory_system->read<std::uintptr_t>(global_vars_);
+    }
+
+    std::uintptr_t get_local_player_controller_offset() const
+    {
+        return g_p_memory_system->read<std::uintptr_t>(local_player_controller_);
+    }
+
+    std::uintptr_t get_view_matrix_offset() const
+    {
+        return g_p_memory_system->read<std::uintptr_t>(view_matrix_);
+    }
+
     bool initialize()
     {
         const auto client_dll_info = g_p_memory_system->get_module(fnv1a::hash("client.dll"));
@@ -50,6 +68,42 @@ public:
         if (!find_offset_from_signature(
             entity_list_,
             g_p_memory_system->relative_address(pattern_scan_result, 0x3, 0x7),
+            client_address,
+            client_dll_info.address
+        ))
+        {
+            FreeLibrary(h_client_dll);
+            return false;
+        }
+
+        const auto pattern_scan_result_1 = g_p_memory_system->pattern_scan(h_client_dll, "48 89 0D ? ? ? ? 48 89 41");
+        if (!find_offset_from_signature(
+            global_vars_,
+            g_p_memory_system->relative_address(pattern_scan_result_1, 0x3, 0x7),
+            client_address,
+            client_dll_info.address
+        ))
+        {
+            FreeLibrary(h_client_dll);
+            return false;
+        }
+
+        const auto pattern_scan_result_2 = g_p_memory_system->pattern_scan(h_client_dll, "48 8B 05 ? ? ? ? 48 85 C0 74 53");
+        if (!find_offset_from_signature(
+            local_player_controller_,
+            g_p_memory_system->relative_address(pattern_scan_result_2, 0x3, 0x7),
+            client_address,
+            client_dll_info.address
+        ))
+        {
+            FreeLibrary(h_client_dll);
+            return false;
+        }
+
+        const auto pattern_scan_result_3 = g_p_memory_system->pattern_scan(h_client_dll, "48 8D 0D ? ? ? ? 48 C1 E0 06");
+        if (!find_offset_from_signature(
+            view_matrix_,
+            g_p_memory_system->relative_address(pattern_scan_result_3, 0x3, 0x7),
             client_address,
             client_dll_info.address
         ))

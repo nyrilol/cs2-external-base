@@ -7,7 +7,7 @@
 #define NUM_SERIAL_NUM_SHIFT_BITS 15
 #define ENT_MAX_NETWORKED_ENTRY 16384
 
-class c_entity;
+class c_player_pawn;
 class c_base_handle
 {
 public:
@@ -52,7 +52,7 @@ public:
         return static_cast<int>(index_ >> NUM_SERIAL_NUM_SHIFT_BITS);
     }
 
-    [[nodiscard]] c_entity* get() const;
+    [[nodiscard]] c_player_pawn* get() const;
 
 private:
     uint32_t index_;

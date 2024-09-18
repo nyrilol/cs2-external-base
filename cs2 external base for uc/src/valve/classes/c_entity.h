@@ -4,7 +4,6 @@
 #include "../../utils/memory/types/c_base_handle.h"
 #include <string>
 
-// Entity Identity Class
 class c_entity_identity
 {
 public:
@@ -48,7 +47,6 @@ private:
     }
 };
 
-// Entity Instance Class
 class c_entity_instance
 {
 public:
@@ -74,16 +72,30 @@ public:
     OFFSET(c_entity_identity*, get_entity, 0x10);
 };
 
-// Entity Class
-class c_entity : public c_entity_instance
+class c_game_scene_node
 {
 public:
-    static c_entity* get_entity_from_index(int index)
+    // NETVAR(vector, origin, "CGameSceneNode->m_vecAbsOrigin");
+};
+
+class c_player_controller
+{
+public:
+    static c_player_controller* get_entity_from_index(int index)
     {
         uintptr_t entry = g_p_memory_system->read<uint64_t>(g_offsets->get_entity_list_offset() + (0x8 * ((index & 0x7FFF) >> 0x9)) + 0x10);
         if (entry == 0) return nullptr;
 
-        return g_p_memory_system->read<c_entity*>(entry + 0x78 * (index & 0x1FF));
+        return g_p_memory_system->read<c_player_controller*>(entry + 0x78 * (index & 0x1FF));
+    }
+
+    [[nodiscard]] std::string name() const
+    {
+        DWORD64 sanitized_player_name_ptr = g_p_memory_system->read<DWORD64>(reinterpret_cast<DWORD64>(this) + g_netvars->get_offset(fnv1a::hash("CCSPlayerController->m_sSanitizedPlayerName")));
+        if (sanitized_player_name_ptr == 0)
+            return {};
+
+        return g_p_memory_system->read_string(sanitized_player_name_ptr);
     }
 
     std::string get_schema_name()
@@ -100,6 +112,31 @@ public:
         return schema_name.empty() ? "invalid" : schema_name;
     }
 
+    std::string clan_tag()
+    {
+        DWORD64 clan_tag_ptr = g_p_memory_system->read<DWORD64>(reinterpret_cast<DWORD64>(this) + g_netvars->get_offset(fnv1a::hash("CCSPlayerController->m_szClan")));
+        if (clan_tag_ptr == 0)
+            return {};
+
+        return g_p_memory_system->read_string(clan_tag_ptr);
+    }
+
+    NETVAR(c_handle<c_player_pawn>, pawn, "CCSPlayerController->m_hPlayerPawn");
+    NETVAR(bool, is_alive, "CCSPlayerController->m_bPawnIsAlive");
+    NETVAR(std::uint32_t, tick_base, "CBasePlayerController->m_nTickBase");
+};
+
+class c_player_pawn : public c_entity_instance
+{
+public:
+    static c_player_pawn* get_entity_from_index(int index)
+    {
+        uintptr_t entry = g_p_memory_system->read<uint64_t>(g_offsets->get_entity_list_offset() + (0x8 * ((index & 0x7FFF) >> 0x9)) + 0x10);
+        if (entry == 0) return nullptr;
+
+        return g_p_memory_system->read<c_player_pawn*>(entry + 0x78 * (index & 0x1FF));
+    }
+
     [[nodiscard]] c_base_handle get_ref_handle() const
     {
         c_entity_identity* identity = get_entity();
@@ -109,18 +146,46 @@ public:
         return c_base_handle(identity->get_entry_index(), identity->get_serial_number() - (identity->flags() & 1));
     }
 
-    [[nodiscard]] std::string name() const
-    {
-        DWORD64 sanitized_player_name_ptr = g_p_memory_system->read<DWORD64>(reinterpret_cast<DWORD64>(this) + g_netvars->get_offset(fnv1a::hash("CCSPlayerController->m_sSanitizedPlayerName")));
-        if (sanitized_player_name_ptr == 0)
-            return {};
-
-        return g_p_memory_system->read_string(sanitized_player_name_ptr);
-    }
-
-    // Controller related
-    NETVAR(c_handle<c_entity>, pawn, "CCSPlayerController->m_hPlayerPawn");
-
-    // Pawn related
     NETVAR(std::int32_t, health, "C_BaseEntity->m_iHealth");
+    NETVAR(c_game_scene_node*, game_scene_node, "C_BaseEntity->m_pGameSceneNode");
+    NETVAR(std::int32_t, last_think_tick, "C_BaseEntity->m_nLastThinkTick");
+    NETVAR(std::int32_t, max_health, "C_BaseEntity->m_iMaxHealth");
+    NETVAR(uint8_t, life_state, "C_BaseEntity->m_lifeState");
+    NETVAR(bool, takes_damage, "C_BaseEntity->m_bTakesDamage");
+    NETVAR(std::int32_t, take_damage_flags, "C_BaseEntity->m_nTakeDamageFlags");
+    NETVAR(bool, is_platform, "C_BaseEntity->m_bIsPlatform");
+    NETVAR(float, proxy_random_value, "C_BaseEntity->m_flProxyRandomValue");
+    NETVAR(std::int32_t, e_flags, "C_BaseEntity->m_iEFlags");
+    NETVAR(uint8_t, water_type, "C_BaseEntity->m_nWaterType");
+    NETVAR(bool, interpolate_even_with_no_model, "C_BaseEntity->m_bInterpolateEvenWithNoModel");
+    NETVAR(c_handle<c_player_pawn>, scene_object_controller, "C_BaseEntity->m_hSceneObjectController");
+    NETVAR(std::int32_t, no_interpolation_tick, "C_BaseEntity->m_nNoInterpolationTick");
+    NETVAR(std::int32_t, visibility_no_interpolation_tick, "C_BaseEntity->m_nVisibilityNoInterpolationTick");
+    NETVAR(float, anim_time, "C_BaseEntity->m_flAnimTime");
+    NETVAR(float, simulation_time, "C_BaseEntity->m_flSimulationTime");
+    NETVAR(uint8_t, scene_object_override_flags, "C_BaseEntity->m_nSceneObjectOverrideFlags");
+    NETVAR(bool, has_successfully_interpolated, "C_BaseEntity->m_bHasSuccessfullyInterpolated");
+    NETVAR(bool, has_added_vars_to_interpolation, "C_BaseEntity->m_bHasAddedVarsToInterpolation");
+    NETVAR(bool, render_even_when_not_successfully_interpolated, "C_BaseEntity->m_bRenderEvenWhenNotSuccessfullyInterpolated");
+    NETVAR(float, speed, "C_BaseEntity->m_flSpeed");
+    NETVAR(uint16_t, ent_client_flags, "C_BaseEntity->m_EntClientFlags");
+    NETVAR(bool, client_side_ragdoll, "C_BaseEntity->m_bClientSideRagdoll");
+    NETVAR(uint8_t, team_num, "C_BaseEntity->m_iTeamNum");
+    NETVAR(std::int32_t, spawn_flags, "C_BaseEntity->m_spawnflags");
+    NETVAR(std::int32_t, flags, "C_BaseEntity->m_fFlags");
+    NETVAR(c_handle<c_player_pawn>, effect_entity, "C_BaseEntity->m_hEffectEntity");
+    NETVAR(c_handle<c_player_pawn>, owner_entity, "C_BaseEntity->m_hOwnerEntity");
+    NETVAR(float, water_level, "C_BaseEntity->m_flWaterLevel");
+    NETVAR(std::uint32_t, effects, "C_BaseEntity->m_fEffects");
+    NETVAR(std::int32_t, ground_body_index, "C_BaseEntity->m_nGroundBodyIndex");
+    NETVAR(bool, animated_every_tick, "C_BaseEntity->m_bAnimatedEveryTick");
+    NETVAR(uint16_t, think, "C_BaseEntity->m_hThink");
+    NETVAR(uint8_t, bbox_vis_flags, "C_BaseEntity->m_fBBoxVisFlags");
+    NETVAR(bool, predictable, "C_BaseEntity->m_bPredictable");
+    NETVAR(bool, render_with_view_models, "C_BaseEntity->m_bRenderWithViewModels");
+    NETVAR(std::int32_t, first_predictable_command, "C_BaseEntity->m_nFirstPredictableCommand");
+    NETVAR(std::int32_t, last_predictable_command, "C_BaseEntity->m_nLastPredictableCommand");
+    NETVAR(c_handle<c_player_pawn>, old_move_parent, "C_BaseEntity->m_hOldMoveParent");
+    NETVAR(std::int32_t, next_script_var_record_id, "C_BaseEntity->m_nNextScriptVarRecordID");
+    NETVAR(std::int32_t, data_change_event_ref, "C_BaseEntity->m_DataChangeEventRef");
 };
