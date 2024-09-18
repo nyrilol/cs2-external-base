@@ -1,38 +1,35 @@
-This belongs to [@ember-win](https://github.com/ember-win).
+🌟 **cs2 external base** 🌟  
+welcome to the **cs2 external base!** this repo is your go-to spot for building external tools for counter-strike 2 (cs2). it's built with simplicity and clarity in mind, perfect for anyone looking to dive into the world of external cs2 tools.
 
-# CS2 External Base
+### ✨ features
 
-Welcome to the CS2 External Base! This repository provides a simple and clean foundation for developing external tools for Counter-Strike 2 (CS2). It is designed to help developers understand the fundamentals of external tools and how they interact with the game.
+- **clean codebase**: super easy to follow, with code that's organized and approachable. great for learning how external tools interact with cs2.
+- **modular design**: everything's built to be flexible, so you can tweak or extend the features to suit your needs.
+- **educational use**: this project is all about helping you understand how external tools work with cs2, so feel free to experiment and learn!
 
-## Features
+### ⚠️ important notes
 
-- **Clean Codebase:** The code is organized and easy to understand, making it suitable for educational purposes and learning how external tools interact with CS2.
-- **Modular Design:** Components are designed to be modular, allowing for easy customization and extension.
-- **Educational Use:** The project is intended to help users learn and understand how external tools work with CS2.
+- **use at your own risk**: this is purely for educational purposes! we're not responsible for anything that happens when you use it, so please be careful.  
+- **compliance**: make sure you're following the rules! this tool is meant to give you insights, not to exploit or mess up gameplay. stay on the good side of things!
 
-## Important Notes
-
-- **Use at Your Own Risk:** This project is provided for educational purposes only. Use it responsibly and at your own risk. The creators of this project are not responsible for any consequences that may arise from its use.
-- **Compliance:** Ensure that you comply with all relevant laws and terms of service. This project is intended to provide educational insights and should not be used to gain an unfair advantage or disrupt gameplay.
-
-## License
+### 📜 license
 
 ```
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-                    Version 2, December 2004
+            do what the fuck you want to public license
+                    version 2, december 2004
 
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+ copyright (c) 2004 sam hocevar <sam@hocevar.net>
 
- Everyone is permitted to copy and distribute verbatim or modified
+ everyone is permitted to copy and distribute verbatim or modified
  copies of this license document, and changing it is allowed as long
  as the name is changed.
 
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+            do what the fuck you want to public license
+   terms and conditions for copying, distribution and modification
 
-  0. You just DO WHAT THE FUCK YOU WANT TO.
+  0. you just do what the fuck you want to.
 ```
 
-## Disclaimer
+### ❗ disclaimer
 
-This tool is intended for educational purposes only. The authors do not condone or support any use of this tool that violates the terms of service of Counter-Strike 2 or any other applicable regulations.
+this tool is meant to teach and inspire. we do *not* condone using it in ways that break the cs2 terms of service or any other rules. be smart and responsible! 😇
