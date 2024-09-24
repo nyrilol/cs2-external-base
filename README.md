@@ -1,3 +1,5 @@
+noone gaf bout this game anymore lowkey so take this 
+
 🌟 **cs2 external base** 🌟  
 welcome to the **cs2 external base!** this repo is your go-to spot for building external tools for counter-strike 2 (cs2). it's built with simplicity and clarity in mind, perfect for anyone looking to dive into the world of external cs2 tools.
 
